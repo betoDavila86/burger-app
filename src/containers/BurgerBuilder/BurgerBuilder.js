@@ -7,6 +7,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
 import axios from '../../axios-orders'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import WithErrorHandler from '../../hoc/withErrorHandler/WithErrorHandler'
+import { withRouter } from 'react-router-dom'
 
 const INGREDIENT_PRICES = {
     salad: 0.4,
@@ -15,13 +16,15 @@ const INGREDIENT_PRICES = {
     bacon: 0.6
 }
 
-const BurgerBuilder = () => {
+const BurgerBuilder = (props) => {
     const [ingredients, setIngredients] = useState(null)
     const [price, setPrice] = useState(3);
     const [purchasable, setPurchasable] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false)
+
+    // console.log(props)
 
     useEffect(() => {
         axios.get('/ingredients.json')
@@ -89,31 +92,40 @@ const BurgerBuilder = () => {
     }
 
     const handleContinuePurchase = () => {
-        setLoading(true);
-        const order = {
-            ingredients,
-            price,
-            customer: {
-                name: 'Beto Dávila',
-                address: {
-                    street: 'Alguna Calle, 99',
-                    zipCode: '99999',
-                    country: 'Spain'
-                },
-                email: 'beto@mail.com',
-            },
-            deliveryMethod: 'fastest'
+        // setLoading(true);
+        // const order = {
+        //     ingredients,
+        //     price,
+        //     customer: {
+        //         name: 'Beto Dávila',
+        //         address: {
+        //             street: 'Alguna Calle, 99',
+        //             zipCode: '99999',
+        //             country: 'Spain'
+        //         },
+        //         email: 'beto@mail.com',
+        //     },
+        //     deliveryMethod: 'fastest'
+        // }
+        // axios.post('/orders.json', order)
+        //     .then(response => {
+        //         setLoading(false);
+        //         setShowModal(false);
+        //     })
+        //     .catch(err => {
+        //         setLoading(false);
+        //         setShowModal(false);
+        //     })
+        const queryParams = [];
+        for (let i in ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(ingredients[i]))
         }
-        axios.post('/orders.json', order)
-            .then(response => {
-                setLoading(false);
-                setShowModal(false);
-            })
-            .catch(err => {
-                setLoading(false);
-                setShowModal(false);
-            })
+        const queryString = queryParams.join('&')
 
+        props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
+        })
     }
 
     const handleCancelPurchase = () => {
@@ -155,4 +167,4 @@ const BurgerBuilder = () => {
     );
 
 }
-export default WithErrorHandler(BurgerBuilder, axios);
+export default withRouter(WithErrorHandler(BurgerBuilder, axios));
