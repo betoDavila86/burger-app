@@ -1,10 +1,15 @@
-import classes from "BuildControl.module.css";
+import classes from "./BuildControl.module.css";
 
-const buildControl = ({ labelIng }) => (
+const buildControl = ({ label, added, removed, disabled }) => (
     <div className={classes.BuildControl}>
-        <div>{labelIng}</div>
-        <button className={classes.Less}>-</button>
-        <button className={classes.More}>+</button>
+        <div className={classes.Label}>{label}</div>
+        <button
+            onClick={removed}
+            className={classes.Less}
+            disabled={disabled}>-</button>
+        <button
+            onClick={added}
+            className={classes.More}>+</button>
     </div>
 )
 export default buildControl;

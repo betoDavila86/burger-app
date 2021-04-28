@@ -5,14 +5,14 @@ const burger = ({ ingredients }) => {
 
     // console.log(ingredients)
     let transformedIngredients = Object.keys(ingredients).map(ingKey => {
-        return [...Array(ingredients[ingKey])].map((_, index) => <BurgerIngredient key={ingKey + index} type={ingKey} />)
+        return [...Array(ingredients[ingKey])].map((_, index) =>
+            <BurgerIngredient key={ingKey + index} type={ingKey} />)
     })
         .reduce((arr, el) => arr.concat(el), [])
     // console.log(Object.keys(ingredients).map(ingKey => [...Array(ingredients[ingKey])]))
-    // console.log(transformedIngredients)
 
     if (transformedIngredients.length === 0) {
-        transformedIngredients = <p>Please add some tasty ingredients to your burger!</p>
+        transformedIngredients = <p>Please, add ingredients to your burger!</p>
     }
 
     return (
